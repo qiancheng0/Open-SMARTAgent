@@ -1,5 +1,5 @@
 # SMART: Self-Aware Agent for Tool Overuse Mitigation
-[**🤗 Model**](https://github.com/qiancheng0/Open-SMARTAgent) | [**📊 Dataset**](https://github.com/qiancheng0/Open-SMARTAgent/tree/main/data_raw) | [**📖 Paper**](https://github.com/qiancheng0/Open-SMARTAgent) |
+[**🤗 Model**](https://huggingface.co/collections/emrecanacikgoz/smart-67b2c51f75a7b25003cf7ea3) | [**📊 Dataset**](https://github.com/qiancheng0/Open-SMARTAgent/tree/main/data_raw) | [**📖 Paper**](https://github.com/qiancheng0/Open-SMARTAgent) |
 
 This repo contains the official evaluation code and dataset for the paper "SMART: Self-Aware Agent for Tool Overuse Mitigation"
 
