@@ -31,13 +31,99 @@ In `/shared/nas2/chengq9/open-smartagent/data_train/instruction_pair_data_indica
 For inference, we provide data for both tool prompt baseline (ends in `_tool_prompt.json`) and SMARTAgent (ends in `_smart.json`). The inference data involves both the test split of SMART-ER, representing the in-domain test data (starts with `domain_`), and the out-of-distribution test data (starts with `ood_`). These could be used respectively for model inference.
 
 ### SMARTAgent Model
-@Emre (put the link to our trained SMARTAgent)
+Our SMARTAgent family consists of five models across different architectures and scales, all available on Hugging Face:
+1. [SmartAgent-Llama-3.1-8B](https://huggingface.co/emrecanacikgoz/SmartAgent-Llama-3.1-8B)
+2. [SmartAgent-Llama-3.1-70B](https://huggingface.co/emrecanacikgoz/SmartAgent-Llama-3.1-70B)
+3. [SmartAgent-Mistral-7B-Instruct-v0.3](https://huggingface.co/emrecanacikgoz/SmartAgent-Mistral-7B-Instruct-v0.3)
+4. [SmartAgent-Mistral-Nemo-Instruct-2407](https://huggingface.co/emrecanacikgoz/SmartAgent-Mistral-Nemo-Instruct-2407)
+5. [Mistral-Small-24B-Instruct-2501](https://huggingface.co/emrecanacikgoz/Mistral-Small-24B-Instruct-2501)
+
+🔗 **Explore the entire SMARTAgent model family** in our [Hugging Face Collection](https://huggingface.co/collections/emrecanacikgoz/smart-67b2c51f75a7b25003cf7ea3).
 
 
 ## 🧪 Experiments
 
 ### Training
-@Emre (put the step to conduct model training)
+
+To ensure efficient training and easy reproducibility, **SMARTAgents** are trained using the [LLaMA-Factory Framework](https://github.com/hiyouga/LLaMA-Factory).
+
+---
+
+#### **Step 1: Environment Setup**  
+We recommend creating a new conda environment for one-to-one reproducibility.
+
+```bash
+cd training/LLamA-Factory
+
+conda deactivate  # Deactivate any existing environment
+
+conda create --name smart_training python=3.12 -y
+conda activate smart_training
+
+pip install -e ".[torch,metrics]"
+```
+
+---
+
+#### **Step 2: Training SMARTAgents**
+
+##### **2.1 Training with Config Files**  
+Before starting, please organize your input and output paths in the config files.
+
+```bash
+# Fine-tune SmartAgent-Llama-3.1-8B on all available GPUs
+llamafactory-cli train configs/train/smart_llama3_1_8B.yaml
+
+# Fine-tune SmartAgent-Llama-3.1-8B on a single GPU
+export CUDA_VISIBLE_DEVICES=0
+llamafactory-cli train configs/train/smart_llama3_1_8B.yaml
+
+# Fine-tune SmartAgent-Llama-3.1-8B on 4 GPUs
+export CUDA_VISIBLE_DEVICES=0,1,2,3
+llamafactory-cli train configs/train/smart_llama3_1_8B.yaml
+
+# Fine-tune SmartAgent-Llama-3.1-70B
+llamafactory-cli train configs/train/smart_llama3_1_70B.yaml
+
+# Fine-tune SmartAgent-Mistral-7B-Instruct-v0.3
+llamafactory-cli train configs/train/smart_mistral_7b_v03.yaml
+
+# Fine-tune SmartAgent-Mistral-Nemo-Instruct-2407
+llamafactory-cli train configs/train/smart_mistral_nemo.yaml
+
+# Fine-tune Mistral-Small-24B-Instruct-2501
+llamafactory-cli train configs/train/smart_mistral_small.yaml
+```
+
+---
+
+##### **2.2 Training with Indicator Tokens**  
+Special tokens: `"[[Reasoning]], [[Code]], [[Search]], [[AskUser]]"`
+
+```bash
+# Fine-tune SmartAgent-Llama-3.1-8B with indicators
+llamafactory-cli train configs/train/smart_llama3_1_8B_indicator.yaml
+
+# Fine-tune SmartAgent-Mistral-7B-Instruct-v0.3 with indicators
+llamafactory-cli train configs/train/smart_mistral_7b_v03_indicator.yaml
+```
+
+---
+
+#### **Step 3: Merging LoRA Checkpoints with Base Models**  
+Merge LoRA weights with the base model after training.
+
+```bash
+# Merge SmartAgent-Llama-3.1-8B
+llamafactory-cli train configs/merge/llama.yaml
+
+# Merge SmartAgent-Mistral-7B-Instruct-v0.3
+llamafactory-cli train configs/merge/mistral.yaml
+```
+❗️**Note:** Double-check your input and output paths in the config files before starting any training or merging process.
+---
+
+
 
 ### Inference
 Our repository supports the interactive inference with customized tools. Please see the Section 4.3 `Inference` for more details.
@@ -73,8 +159,8 @@ python inference_eval_{SUFFIX}.py
 ## 📖 File Structure
 Under the `data_{SUUFFIX}/` directory:
 *  We provide all the training and inference data, ends with `.json`.
-Under the `training/`:
-* @Emre
+Under the `training/` directory:  
+* We have included all necessary files, updated and customized for our pipeline using LLaMA-Factory.
 Under the `inference/`:
 * `utils_{TOOL_NAME}.py`: The implementation of different external tools (backend).
 * `inference_{SUFFIX}.py`: The interactive inference implementation. You may use the bash script to run these files.
@@ -85,7 +171,7 @@ Under the `evaluate/`
 ```text
 @article{qian2025smart,
   title={SMART: Self-Aware Agent for Tool Overuse Mitigation},
-  author={Qian, Cheng and Can Acikgoz, Emre and Wang, Hongru and Chen, Xiusi and Sil, Avirup and Hakkani-Tür, Dilek and Tur, Gokhan and Ji, Heng.},
+  author={Qian, Cheng and Acikgoz, Emre Can and Wang, Hongru and Chen, Xiusi and Sil, Avirup and Hakkani-Tür, Dilek and Tur, Gokhan and Ji, Heng.},
   journal={arXiv preprint arXiv:XXX},
   year={2025}
 }
