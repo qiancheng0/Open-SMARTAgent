@@ -1,0 +1,8 @@
+[submodule "training/training/LLaMA-Factory"]
+	path = training/training/LLaMA-Factory
+	url = https://github.com/qiancheng0/LLaMA-Factory.git
+	branch = smart-lf
+[submodule "training/LLaMA-Factory"]
+	path = training/LLaMA-Factory
+	url = https://github.com/qiancheng0/LLaMA-Factory.git
+	branch = smart-lf
